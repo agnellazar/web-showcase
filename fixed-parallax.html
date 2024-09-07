@@ -1,0 +1,362 @@
+<html>
+    <title>
+        Fixed Parallax
+    </title>
+
+    <script src = "helper.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        hr {
+            padding: 0;
+            margin: 0;
+        }
+        .translucent-bg-1 {
+            background-color: rgba(255, 255, 255, .4);
+        }
+
+        .translucent-bg-2 {
+            background-color: rgba(245, 245, 220, 0.600);
+        }
+
+        .header-spacer {
+            height: 60vh;
+            background-color: rgba(245, 245, 220, 0.750);
+        }
+        
+        .footer-spacer {
+            height: 50vh;
+            background-color: rgba(245, 245, 220, 0.750);
+        }
+
+        body {
+            width: 100vw;
+            overflow-x: hidden;
+        }
+
+        body::-webkit-scrollbar {
+            display: none;
+        }
+
+        .section {
+            height: 60vh;
+            overflow: hidden;
+            transition: background-color 0.5s;
+            margin: 0.75rem;
+            border-radius: 15px;
+        }
+
+        .main-img {
+            height: 55vh;
+            width: 50vw;
+        }
+
+        .std-br {
+            border-radius: 15px;
+        }
+        .std-shadow {
+            box-shadow: 0 45px 65px rgba(0,0,0,0.50), 0 35px 22px rgba(0,0,0,0.16);
+        }
+
+        .stationary-bg {
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-size: 50vw 100vh;
+        }
+
+        .content-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            height: 120vh;
+            width: 100vw;
+            overflow-y: hidden;
+            
+            background-color: rgb(50,50,50);
+            filter: blur(2px);
+            transition: background-image 0.8s;
+        }
+
+        .para {
+            font-size: larger;
+            font-weight: 400;
+        }
+
+        #height-anchor {
+            float: left;
+            height: 100vh;
+            visibility: hidden;
+        }
+
+        .title-1 {
+            height: 35%;
+        }
+
+        .title-2 {
+            height: 35%;
+        }
+
+        .font-1 {
+            font-size: 40px;
+            font-weight: 500;
+        }
+
+        .font-2 {
+            font-size: 20px;
+            font-weight: 300;
+        }
+
+        .pos-tl {
+            top: 0;
+            left: 0;
+        }
+
+        .pos-tr {
+            top: 0;
+            right: 0;
+        }
+
+        .info-panel-1 {
+            border-radius: 15px 0px 0px 0px;
+            font-size: 30px;
+            font-weight: 600;
+        }
+
+        .info-panel-2 {
+            border-radius: 0px 15px 0px 0px;
+        }
+
+        .text-justify {
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .info-panel-height {
+            height: 5rem;
+        }
+
+        .footer-bar {
+
+            height: 3rem;
+            width: 100%;
+            background-color: rgba(255,255,255,0.75);
+        }
+
+        .bg-strip {
+            background-image: url('./images/tallest Buildings/building-strip2.png');
+            background-size: 100% 50%;
+            background-position: bottom +3rem left 0;
+            background-repeat: no-repeat;
+            background-color: rgba(255,255,255,0.75);
+        }
+    </style>
+    <script>
+
+        window.onload = () => {
+            loadData();
+        }
+
+        function loadData() {
+            fillMainContentBoilerPlate();
+            fillTextSerially('para', imgData.map(d=>d.txt));
+            var rank = 1;
+            fillTextSerially('info-panel-content-1', imgData.map(d=>rank++));
+            fillTextSerially('info-panel-content-2', imgData.map(d=>{return d.p1 + "<br>" + d.p2}));
+            setBackgroundWithOffSets();
+
+        }
+
+        function fillMainContentBoilerPlate() {
+            const mainContentEle = document.getElementById("main-content");
+            const content = mainContentEle.innerHTML;
+            mainContentEle.innerHTML = "";
+
+            let fullContent = "";
+            for(let i=0; i<imgData.length; i++) {
+                fullContent += content;
+            }
+
+            mainContentEle.innerHTML = fullContent;
+        }
+
+        var imgData = [
+                {
+                    url: './images/tallest Buildings/burj Khalifa.jpg',
+                    txt: 'Burj Khalifa (Dubai, 828 m) - The tallest building in the world, renowned for its distinctive spire, advanced high-speed elevators, and an observation deck on the 148th floor offering unparalleled city views. Its design reflects Islamic architecture, blending modern engineering with cultural elements.',
+                    p1: '828m',
+                    p2: 'Dubai',
+                },
+                {
+                    url: './images/tallest Buildings/estos-son-los.jpg',
+                    txt: 'Merdeka 118 (Kuala Lumpur, 644) - Standing at 644 meters, it symbolizes Malaysia’s growth and ambition. The building’s design reflects traditional Malaysian art and culture, and it includes a mixed-use space with offices, a hotel, and observation decks.',
+                    p1: '644m',
+                    p2: 'Kuala Lumpur'
+                },
+                {
+                    url: './images/tallest Buildings/ShanghaiTower.jpg',
+                    txt: 'Shanghai Tower (Shanghai, 632 m) - The tallest in China, notable for its unique twisting design that mitigates wind loads and improves energy efficiency. The building features a sky garden, vertical transportation systems, and a glass façade that enhances natural light and sustainability.',
+                    p1: '632m',
+                    p2: 'Shanghai'
+                },
+                {
+                    url: './images/tallest Buildings/Abraj-al-Bait-Towers.jpg',
+                    txt: "Abraj Al-Bait Clock Tower (Mecca, 601 m) - Dominates the skyline with the world's largest clock face. This structure includes a luxury hotel, shopping mall, and prayer rooms, reflecting its central role in the religious and commercial life of Mecca.",
+                    p1: '601m',
+                    p2: 'Mecca'
+                },
+                {
+                    url: './images/tallest Buildings/ping-an-finance.jpg',
+                    txt: 'Ping An Finance Centre (Shenzhen, 599 m) - Known for its sleek, tapering design and multifunctional use. It houses office spaces, a hotel, retail outlets, and observation decks, emphasizing a combination of modern aesthetics and practicality in urban design.',
+                    p1: '599m',
+                    p2: 'Shenzhen'
+                },
+                {
+                    url: './images/tallest Buildings/lotte-world-tower.jpg',
+                    txt: 'Lotte World Tower (Seoul, 555 m) - Korea’s tallest building, featuring a dramatic, slender form. It includes a skywalk, observation deck, luxury hotel, retail space, and residential units, showcasing a blend of cutting-edge design and diverse functionality.',
+                    p1: '555m',
+                    p2: 'Seoul'
+                },
+                {
+                    url: './images/tallest Buildings/one_world.jpg',
+                    txt: 'One World Trade Center (New York, 541 m) - The tallest building in the Western Hemisphere, symbolizing resilience and renewal. It features a state-of-the-art design with advanced security, an observation deck, and office spaces, reflecting the rebuilding of the World Trade Center site.',
+                    p1: '541m',
+                    p2: 'New York'
+                },
+                {
+                    url: './images/tallest Buildings/Guangzhou.jfif',
+                    txt: 'Guangzhou CTF Finance Centre (Guangzhou, 530 m) - Recognizable for its cylindrical shape, this building accommodates office spaces, a hotel, and retail areas. Its design focuses on vertical integration and energy efficiency, contributing to the skyline of Guangzhou.',
+                    p1: '530m',
+                    p2: 'Guang-zhou'
+                },
+                {
+                    url: './images/tallest Buildings/Tianjin_CTF_Finance_Centre_in_2019.jpg',
+                    txt: 'The Tianjin CTF Finance Centre (Tianjin, 530m) - is a towering 530 meters tall, making it one of the tallest buildings in the world. This sleek skyscraper blends modern design with functionality, housing offices, a hotel, residential apartments, and retail spaces, epitomizing urban sophistication.',
+                    p1: '530m',
+                    p2: 'Tianjin'
+                },
+                {
+                    url: './images/tallest Buildings/CITIC_Tower_2021.jpg',
+                    txt: 'CITIC Tower (Beijing, 528m) - As one of the tallest buildings in the city, it serves as a major office and commercial hub, reflecting modern architectural elegance and contributing significantly to Beijing\'s skyline.',
+                    p1: '528m',
+                    p2: 'Beijing'
+                },
+            ];
+        function setBackgroundWithOffSets() {
+            
+            elements = document.getElementsByClassName('main-img');
+            for(let i=0; i<elements.length; i++) {
+                const ele = elements.item(i);
+                ele.style.backgroundImage = "url('" + imgData[i].url + "')";
+                const left = ele.getBoundingClientRect().left;
+                ele.style.backgroundPosition = 'bottom left ' + left + 'px'
+            }
+        }
+
+        window.onscroll = () => {
+            changeActiveSegment();
+        }
+        
+        function getScrolledPercent(){
+            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            
+            var heightAnchor = document.getElementById('height-anchor');
+            var height = document.documentElement.scrollHeight - heightAnchor.clientHeight;
+            var scrolled = (winScroll / height) * 100;
+            return scrolled;
+        }
+        
+        function getActiveSegment() {
+            const percent = getScrolledPercent();
+            const segment = 100/(imgData.length+2);
+            if (percent< segment/2) {
+                activeSegment = null;
+            } else if (percent > 100 - segment/2) {
+                activeSegment = null
+            } else {
+                const scrollOffset = percent - segment/2;
+                const heightOffset = 100 - segment;
+                activeSegment = Math.floor(imgData.length * scrollOffset/heightOffset);
+            }
+            return activeSegment;
+        }
+
+        var prevActiveInd;
+        var sectionEles;
+        function changeActiveSegment() {
+            if(!sectionEles) {
+                sectionEles = document.getElementsByClassName("section");
+                console.log('section eles',sectionEles);
+            }
+            const activeInd = getActiveSegment();
+
+            if(activeInd != prevActiveInd){
+                if(prevActiveInd != undefined) {
+                    const prevActiveSegment = sectionEles.item(prevActiveInd);
+                    prevActiveSegment.style.backgroundColor = "transparent";
+                    prevActiveSegment.style.boxShadow = "none";
+                }
+                if(activeInd != null) {
+                    activeSegment = sectionEles.item(activeInd);
+                    activeSegment.style.backgroundColor = "rgba(245, 245, 220, 0.600)";
+                    activeSegment.style.boxShadow = "rgb(0, 0, 0) 0px 20px 10px -10px";
+                }
+    
+                prevActiveInd = activeInd;
+            }
+        }
+
+    </script>
+    <body>
+
+        <div id="content-backdrop" class="content-backdrop"></div>
+
+        <div id="height-anchor"></div>
+
+        <div class="content" style="scrollbar-width: 0;">
+            <div class="header-spacer">
+                <div class="title-1 font-1 text-center pt-5">
+                    World's tallest 10
+                </div>
+                <div class="title-2 font-2 text-center px-5">
+                    Humanity has become obsessed with breaking its limits, creating new records only to break them again and again. In fact, our cities’ skylines have always been defined by those in power during every period in history. At one point churches left their mark, followed by public institutions and in the last few decades, it's commercial skyscrapers that continue to stretch taller and taller. 
+                </div>
+                <div class="title-3 font-2 text-center pt-5">
+                    All info is from: <a href="https://www.archdaily.com/779178/these-are-the-worlds-25-tallest-buildings" target="_blank">https://www.archdaily.com/779178/these-are-the-worlds-25-tallest-buildings</a> and ofcourse chatgpt and <a href="https://en.wikipedia.org/wiki/List_of_tallest_buildings" target="_blank">wikiPedia</a>
+                </div>
+            </div>
+
+            <div id="main-content">
+                <div class="row section">
+                    <div class = "col-5 px-5  h-100 d-flex">
+                        <div class="para text-justify align-self-center">
+                        </div>
+                    </div>
+                    <div class = "col-7 pl-0 align-self-center d-flex h-100 ">
+                        <div class="main-img stationary-bg align-self-center std-br std-shadow position-relative m-auto">
+                            <div class="info-panel-1 translucent-bg-2 position-absolute pos-tl px-3 w-25 text-center info-panel-height align-items-center d-flex text-justify">
+                                <div class="info-panel-content-1 w-100"></div>
+                            </div>
+                            <div class="info-panel-2 translucent-bg-2 position-absolute pos-tr px-3 w-25 text-center info-panel-height align-items-center d-flex text-center">
+                                <div class="info-panel-content-2 w-100"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr/>
+            </div>
+
+
+            <div class="footer-spacer bg-strip">
+                <div class="text-center w-100 font-2 title-2 pt-4 px-5">
+                    As we conclude our exploration of the world’s tallest buildings, it’s clear that these architectural marvels not only redefine skylines but also push the boundaries of engineering and design. Each structure stands as a testament to human ingenuity and ambition, blending innovation with artistry to reach new heights.
+                </div>
+            </div>
+            <hr/>
+            <div class="footer-bar d-flex">
+                <div class="text-start w-50 ps-2 d-inline-block align-self-center">Created by:- Agnel Lazar Alappat</div><div 
+                     class="text-end   w-50 pe-2 d-inline-block align-self-center"><a href="" >Home page</a></div>
+            </div>
+        </div>    
+    </body>
+</html>
